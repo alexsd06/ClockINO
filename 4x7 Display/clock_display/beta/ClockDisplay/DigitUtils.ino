@@ -76,11 +76,6 @@ void showColumn()
   delayMicroseconds(DISPLAY_BRIGHTNESS);
 }
 
-void hideColumn()
-{
-  digitalWrite(column, LOW);
-}
-
 
 int turnOnSegment(int poz, char seg) {
   int segCode=(int)(seg-'A');
@@ -119,33 +114,4 @@ int displayNumber (int poz, int nr) {
     turnOnSegment(poz, segment);
   }
   showColumn();
-}
-
-void disableDigits()
-{
-   disableControl0();
-   disableControl1();
-   hideColumn();
-}
-
-void blink (int repeat, int del)
-{
-   bool disabled=false;
-   while (repeat!=0) {
-    unsigned long m=millis();
-    if (m%(del*2)>=0&&m%(del*2)<=del) {
-      displayNumber(1, 0);
-      displayNumber(2, 0);
-      displayNumber(3, 0);
-      showColumn();
-      disabled=false;
-    }
-    else {
-      if (disabled==false) {
-        disableDigits();
-        disabled=true;
-        repeat--;
-      }
-    }
-   }
 }
