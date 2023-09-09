@@ -58,7 +58,7 @@ void turnOffSegmentPin(int pin) {
   digitalWrite(pin, LOW);
 }
 
-void turnAllLitOff()
+void disableDigits()
 {
   disableControl0();
   disableControl1();
@@ -85,7 +85,7 @@ int turnOnSegment(int poz, char seg) {
   if (hyphenIndex!=-1) {
     int control=activationCode.substring(0, hyphenIndex).toInt();
     int segmentArrayIndex=activationCode.substring(hyphenIndex+1).toInt();
-    turnAllLitOff();
+    disableDigits();
     if (control==0) enableControl0();
     if (control==1) enableControl1();
     turnOnSegmentPin(segments[segmentArrayIndex]);
@@ -98,7 +98,7 @@ int turnOnSegmentNew(int poz, char seg) {
   int segCode=(int)(seg-'A');
   int control=segmentCodesNew[poz][segCode][0];
   int segmentArrayIndex=segmentCodesNew[poz][segCode][1];
-  turnAllLitOff();
+  disableDigits();
   if (control==0) enableControl0();
   if (control==1) enableControl1();
   turnOnSegmentPin(segments[segmentArrayIndex]);

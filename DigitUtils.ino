@@ -13,20 +13,12 @@ String segmentCodes[4][7]={ ///codes[digit][segment(as index of segments)]="acti
   {"1-7", "1-8", "1-9", "0-9", "0-10","0-7", "0-8" }, //digit 2
   {"0-13","0-11","0-12","1-12","1-10","1-13","1-11"}  //digit 4 
 };
-/*
-int segmentCodesNew[4][7][2]={
-  {{1, 1}, {0, 0}, {0, 3}, {1, 2}, {0, 2}, {-1, -1}, {0, 1}},
-  {{0, 6}, {0, 4}, {0, 5}, {1, 5}, {1, 3}, {1,   6}, {1, 4}},
-  {{1, 7}, {1, 8}, {1, 9}, {0, 9}, {0,10}, {0,   7}, {0, 8}},
-  {{0,13}, {0,11}, {0,12}, {1,12}, {1,10}, {1,  13}, {1,11}}
-};
-*/
 String digitCodes[10]={
   //0        1       2        3       4        5        6        7        8         9
   "ABCDEF", "BC", "ABGED", "ABGCD", "FGBC", "AFGCD", "AFEDGC", "ABC", "ABCDEFG", "GFABCD"
 };
 int column=41;
-int lowrer_left_dot=22;
+int lower_left_dot=22;
 int upper_left_dot=23;
 int something = 29;
 
@@ -36,10 +28,16 @@ void initDisplay()
   for (int i=0; i<sizeof(segments)/sizeof(int); i++) pinMode(segments[i], OUTPUT);
   for (int i=0; i<sizeof(turnedOn)/sizeof(int); i++) turnedOn[i]=0;
   pinMode(column, OUTPUT);
+  pinMode(lower_left_dot, OUTPUT);
+  pinMode(upper_left_dot, OUTPUT);
+  pinMode(something, OUTPUT);
 }
 
 void setDisplayBrightness(int bright) {
   DISPLAY_BRIGHTNESS=bright;
+}
+int getDisplayBrightness() {
+  return DISPLAY_BRIGHTNESS;
 }
 
 void enableControl0() {
@@ -61,8 +59,14 @@ void turnOffSegmentPin(int pin) {
   digitalWrite(pin, LOW);
 }
 
-void turnAllLitOff()
+void disableDigits()
 {
+  setDigits_small(0);
+  hideColumn();
+  hideLowerLeftDot();
+  hideUpperLeftDot();
+  hideSomething();
+
   disableControl0();
   disableControl1();
   for (int i=1; i<=turnedOn[0]; i++) {
@@ -74,9 +78,10 @@ void turnAllLitOff()
 
 void showColumn()
 {
+  disableDigits();
+  enableControl1();
   digitalWrite(column, HIGH);
-  turnedOn[++turnedOn[0]]=column;
-  delayMicroseconds(DISPLAY_BRIGHTNESS);
+  delayMicroseconds(DISPLAY_BRIGHTNESS/10);
 }
 
 void hideColumn()
@@ -93,7 +98,7 @@ int turnOnSegment(int poz, char seg) {
   if (hyphenIndex!=-1) {
     int control=activationCode.substring(0, hyphenIndex).toInt();
     int segmentArrayIndex=activationCode.substring(hyphenIndex+1).toInt();
-    turnAllLitOff();
+    disableDigits();
     if (control==0) enableControl0();
     if (control==1) enableControl1();
     turnOnSegmentPin(segments[segmentArrayIndex]);
@@ -101,19 +106,6 @@ int turnOnSegment(int poz, char seg) {
   }
 }
 
-/*
-int turnOnSegmentNew(int poz, char seg) {
-  int segCode=(int)(seg-'A');
-  int control=segmentCodesNew[poz][segCode][0];
-  int segmentArrayIndex=segmentCodesNew[poz][segCode][1];
-  turnAllLitOff();
-  if (control==0) enableControl0();
-  if (control==1) enableControl1();
-  turnOnSegmentPin(segments[segmentArrayIndex]);
-  delayMicroseconds(DISPLAY_BRIGHTNESS);
-
-}
-*/
 
 int displayNumber (int poz, int nr) {
   String segmentsNeeded=digitCodes[nr];
@@ -124,10 +116,38 @@ int displayNumber (int poz, int nr) {
   showColumn();
 }
 
-void disableDigits()
+void showLowerLeftDot()
 {
-   turnAllLitOff();
-   hideColumn();
+  disableDigits();
+  enableControl1();
+  digitalWrite(lower_left_dot, HIGH);
+  delayMicroseconds(DISPLAY_BRIGHTNESS);
+}
+void hideLowerLeftDot()
+{
+  digitalWrite(lower_left_dot, LOW);
+}
+
+void showUpperLeftDot()
+{
+  disableDigits();
+  enableControl1();
+  digitalWrite(upper_left_dot, HIGH);
+  delayMicroseconds(DISPLAY_BRIGHTNESS);
+}
+void hideUpperLeftDot()
+{
+  digitalWrite(upper_left_dot, LOW);
+}
+void showSomething()
+{
+  enableControl1();
+  digitalWrite(something, HIGH);
+  delayMicroseconds(DISPLAY_BRIGHTNESS);
+}
+void hideSomething()
+{
+  digitalWrite(something, LOW);
 }
 
 void blink (int repeat, int del)
