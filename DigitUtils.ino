@@ -2,9 +2,9 @@ int turnedOn[28]; //maxim 14 + turnedOn[0] care retine dimensiunea
 
 int DISPLAY_BRIGHTNESS=1000;
 //Digital Pin 3 needs repairs (breadbord pozition 6)
-int controls[]={A4, A5};
+int controls[]={39, 40};
 ////////////////0  1  2  3  4  5  6  7  8   9   10  11  12  13
-int segments[]={2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, A0, A1};
+int segments[]={24, 25, 26, 27, 28, 30, 31, 32, 33, 34, 35, 36, 37, 38};
 
 String segmentCodes[4][7]={ ///codes[digit][segment(as index of segments)]="activation code";
   // A      B      C      D      E      F      GA 
@@ -25,7 +25,10 @@ String digitCodes[10]={
   //0        1       2        3       4        5        6        7        8         9
   "ABCDEF", "BC", "ABGED", "ABGCD", "FGBC", "AFGCD", "AFEDGC", "ABC", "ABCDEFG", "GFABCD"
 };
-int column=A2;
+int column=41;
+int lowrer_left_dot=22;
+int upper_left_dot=23;
+int something = 29;
 
 void initDisplay()
 {
@@ -123,8 +126,7 @@ int displayNumber (int poz, int nr) {
 
 void disableDigits()
 {
-   disableControl0();
-   disableControl1();
+   turnAllLitOff();
    hideColumn();
 }
 

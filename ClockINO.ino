@@ -4,7 +4,7 @@
 //TODO: Fix the column(:) dissappearing on some time (1:07)
 //TODO: Make a new INO file (TimeHelper) with all functions related to time.
 
-int RECV_PIN = A3;
+int RECV_PIN = 11;
 int count=0;
 
 ul prevMili, prevSec, prevMin;
@@ -23,7 +23,8 @@ void setup() {
 }
 int irToNumber(String hexCode)
 {
-  String codeArray[10]={"ef10fb04", "ee11fb04", "ed12fb04", "ec13fb04", "eb14fb04", "ea15fb04", "e916fb04", "e817fb04", "e718fb04", "e619fb04"};
+  //////////////////////    0            1           2          3           4           5           6           7           8            9
+  String codeArray[10]={"a55a00ff", "b24d00ff", "b14e00ff", "b04f00ff", "ae5100ff", "ad5200ff", "ac5300ff", "aa5500ff", "a95600ff", "a85700ff"};
   Serial.println(hexCode);
   for (int i=0; i<10; i++) {
     if (hexCode==codeArray[i])
@@ -81,24 +82,16 @@ void setTime(int cif) {
   }
 }
 
-bool disabled=false, alreadyDisabled=false;
+bool disabled=false;
 
 
 void loop() {
   setDisplayBrightness(3);
-  if (readTime==false&&disabled==false&&alreadyDisabled==false) {
+  if (readTime==false&&disabled==false) {
     displayTime();
   }
 
-  if (disabled==true&&alreadyDisabled==false) {
-    disableDigits();
-    alreadyDisabled=true;
-  }
-  if (disabled==false&&alreadyDisabled==true) {
-    alreadyDisabled=false;
-  }
-
-  if (readTime==true&&disabled==false&&alreadyDisabled==false) {
+  if (readTime==true&&disabled==false) {
     if (digit1==1||digit1==2) displayNumber(0, digit1); 
     displayNumber(1, digit2); displayNumber(2, digit3); displayNumber(3, digit4);
   }
@@ -108,7 +101,8 @@ void loop() {
       IrReceiver.resume(); // Enable receiving of the next value
       if (rawData==0) return;
       String hexCode=String(rawData, HEX);
-      if (hexCode=="f40bfb04") {
+      Serial.println(hexCode);
+      if (hexCode=="a65900ff") {
         readTime=true;
         digit1=0; digit2=0; digit3=0; digit4=0;
         poz=0;
@@ -117,8 +111,9 @@ void loop() {
         return;
       }
 
-      if (hexCode=="f708fb04") {
+      if (hexCode=="b64900ff") {
         disabled=!disabled;
+        disableDigits();
         return;
       }
 

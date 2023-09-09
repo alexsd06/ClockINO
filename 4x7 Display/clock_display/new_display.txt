@@ -10,39 +10,39 @@ SB6052N (on top)
 -
 -
 
-3. - Punct stanga jos
-4. - Punct stanga sus
-5. - D0, B- (Digital 2)
-6. - D0, GA (Digital 3)
-7. - D0, ED (Digital 4)
-8. - D0C, D1E (Digital 5)
-9. - D1, BG (Digital 6)
-10.- ...
-11.- D1, CD (Digital 7)
-12.- D1, AF (Digital 8)
+3. - Punct stanga jos (Digital 22)
+4. - Punct stanga sus (Digital 23)
+5. - D0, B- (Digital 24)
+6. - D0, GA (Digital 25)
+7. - D0, ED (Digital 26)
+8. - D0C, D1E (Digital 27)
+9. - D1, BG (Digital 28)
+10.- Something (Digital 29)
+11.- D1, CD (Digital 30)
+12.- D1, AF (Digital 31)
 
 13.- EMPTY
 
-14.- D2, FA (Digital 9)
-15.- D2, GB (Digital 10)
-16.- D2, DC (Digital 11)
-17.- D2E, D3E (Digital 12)
-18.- D3, BG (Digital 13)
-19.- D3, CD (A0)
-20.- D3, AF (A1)
+14.- D2, FA (Digital 32)
+15.- D2, GB (Digital 33)
+16.- D2, DC (Digital 34)
+17.- D2E, D3E (Digital 35)
+18.- D3, BG (Digital 36)
+19.- D3, CD (37)
+20.- D3, AF (38)
 
 - EMPTY
 -
 -
 -
 
-- Control Left (1) [GND] (Raise voltage to disable)
+- Control Left (1) [GND] (Raise voltage to disable) (Digital 39)
 
 - EMPTY
 -
 
-- Control Right (2) [GND] (Raise voltage to disable)
-- Doua puncte Centru (A2)
+- Control Right (2) [GND] (Raise voltage to disable) (Digital 40)
+- Doua puncte Centru (A2) (Digital 41)
 
     A
    ---
