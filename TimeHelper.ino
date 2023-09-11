@@ -23,8 +23,6 @@ void displayTime()
     displayNumber_small(0, s1); 
     displayNumber_small(1, s2); 
   }
-  if (readSecs==true) showLowerLeftDot();
-  if (readBrightness==true) showUpperLeftDot();
 }
 
 void setTime(int cif) {
@@ -72,6 +70,9 @@ void display()
   else {
     if (disabled==false) displayDuringReadTime();
   }
+  if (readSecs==true) showLowerLeftDot();
+  if (readBrightness==true) showUpperLeftDot();
+  showColumn();
 }
 
 void disableTimeReading()
@@ -88,7 +89,8 @@ void disableTimeReading()
 
 void increaseTime()
 {
-  ul mili=millis();
+  ul micro=micros();
+  ul mili=micro/1000;
   ul seconds=mili/1000;
   ul mins=seconds/60;
   if (readTime==false) {

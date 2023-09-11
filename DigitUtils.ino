@@ -106,7 +106,6 @@ int displayNumber (int poz, int nr) {
     char segment=segmentsNeeded[i];
     turnOnSegment(poz, segment);
   }
-  showColumn();
 }
 
 void showLowerLeftDot()
@@ -114,7 +113,7 @@ void showLowerLeftDot()
   disableDigits();
   enableControl1();
   digitalWrite(lower_left_dot, HIGH);
-  delayMicroseconds(DISPLAY_BRIGHTNESS);
+  delayMicroseconds(DISPLAY_BRIGHTNESS/10);
 }
 void hideLowerLeftDot() {digitalWrite(lower_left_dot, LOW);}
 
@@ -123,7 +122,7 @@ void showUpperLeftDot()
   disableDigits();
   enableControl1();
   digitalWrite(upper_left_dot, HIGH);
-  delayMicroseconds(DISPLAY_BRIGHTNESS);
+  delayMicroseconds(DISPLAY_BRIGHTNESS/10);
 }
 void hideUpperLeftDot() {digitalWrite(upper_left_dot, LOW);}
 /*
