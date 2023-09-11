@@ -1,7 +1,6 @@
 int turnedOn[28]; //maxim 14 + turnedOn[0] care retine dimensiunea
 
-int DISPLAY_BRIGHTNESS=1000;
-//Digital Pin 3 needs repairs (breadbord pozition 6)
+int DISPLAY_BRIGHTNESS=500;
 int controls[]={39, 40};
 ////////////////0  1  2  3  4  5  6  7  8   9   10  11  12  13
 int segments[]={24, 25, 26, 27, 28, 30, 31, 32, 33, 34, 35, 36, 37, 38};
@@ -20,7 +19,7 @@ String digitCodes[10]={
 int column=41;
 int lower_left_dot=22;
 int upper_left_dot=23;
-int something = 29;
+//int something = 29; Probably broken lower right dot.
 
 void initDisplay()
 {
@@ -30,15 +29,12 @@ void initDisplay()
   pinMode(column, OUTPUT);
   pinMode(lower_left_dot, OUTPUT);
   pinMode(upper_left_dot, OUTPUT);
-  pinMode(something, OUTPUT);
+  //pinMode(something, OUTPUT);
 }
 
-void setDisplayBrightness(int bright) {
-  DISPLAY_BRIGHTNESS=bright;
-}
-int getDisplayBrightness() {
-  return DISPLAY_BRIGHTNESS;
-}
+void setDisplayBrightness(int bright) {DISPLAY_BRIGHTNESS=bright;}
+
+int getDisplayBrightness() {return DISPLAY_BRIGHTNESS;}
 
 void enableControl0() {
   digitalWrite(controls[1], HIGH);
@@ -48,6 +44,7 @@ void enableControl1() {
   digitalWrite(controls[0], HIGH);
   digitalWrite(controls[1], LOW);
 }
+
 void disableControl0() {digitalWrite(controls[0], HIGH);}
 void disableControl1() {digitalWrite(controls[1], HIGH);}
 
@@ -65,7 +62,7 @@ void disableDigits()
   hideColumn();
   hideLowerLeftDot();
   hideUpperLeftDot();
-  hideSomething();
+  //hideSomething();
 
   disableControl0();
   disableControl1();
@@ -83,11 +80,7 @@ void showColumn()
   digitalWrite(column, HIGH);
   delayMicroseconds(DISPLAY_BRIGHTNESS/10);
 }
-
-void hideColumn()
-{
-  digitalWrite(column, LOW);
-}
+void hideColumn() {digitalWrite(column, LOW);}
 
 
 int turnOnSegment(int poz, char seg) {
@@ -123,10 +116,7 @@ void showLowerLeftDot()
   digitalWrite(lower_left_dot, HIGH);
   delayMicroseconds(DISPLAY_BRIGHTNESS);
 }
-void hideLowerLeftDot()
-{
-  digitalWrite(lower_left_dot, LOW);
-}
+void hideLowerLeftDot() {digitalWrite(lower_left_dot, LOW);}
 
 void showUpperLeftDot()
 {
@@ -135,21 +125,16 @@ void showUpperLeftDot()
   digitalWrite(upper_left_dot, HIGH);
   delayMicroseconds(DISPLAY_BRIGHTNESS);
 }
-void hideUpperLeftDot()
-{
-  digitalWrite(upper_left_dot, LOW);
-}
+void hideUpperLeftDot() {digitalWrite(upper_left_dot, LOW);}
+/*
 void showSomething()
 {
   enableControl1();
   digitalWrite(something, HIGH);
   delayMicroseconds(DISPLAY_BRIGHTNESS);
 }
-void hideSomething()
-{
-  digitalWrite(something, LOW);
-}
-
+void hideSomething() {digitalWrite(something, LOW);}
+*/
 void blink (int repeat, int del)
 {
    bool disabled=false;

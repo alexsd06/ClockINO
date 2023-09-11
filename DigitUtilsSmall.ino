@@ -22,16 +22,11 @@ E |   | C
 int segments_small[]={43, 44, 45, 46, 47, 48, 49};
 int digits_small[]={50, 51, 52, 53};
 int DP_small=42;
-int DISPLAY_BRIGHTNESS_small=1000; //the smaller the number, the brighter the display
+int DISPLAY_BRIGHTNESS_small=500; //the smaller the number, the brighter the display
 
-void setDisplayBrightness_small(int br)
-{
-  DISPLAY_BRIGHTNESS_small=br; //1...10
-}
+void setDisplayBrightness_small(int br) {DISPLAY_BRIGHTNESS_small=br;}
 
-int getDisplayBrightness_small() {
-  return DISPLAY_BRIGHTNESS_small;
-}
+int getDisplayBrightness_small() {return DISPLAY_BRIGHTNESS_small;}
 
 
 void initDisplayPins_small()
@@ -40,21 +35,13 @@ void initDisplayPins_small()
   for (int i=0; i<4; i++) pinMode(digits_small[i], OUTPUT);
   pinMode(DP_small, OUTPUT);
 }
-void setDigits_small(bool state) //Turn on/off all control pins
-{
-  for (int i=0; i<4; i++) digitalWrite(digits_small[i], !state);
-  //digitalWrite(DP_small, state);
-}
+void setDigits_small(bool state) {for (int i=0; i<4; i++) digitalWrite(digits_small[i], !state);} //Turn on/off all control pins 
 void disableDigits_small() //Turn off all control pins and segments
 {
   for (int i=0; i<4; i++) digitalWrite(digits_small[i], HIGH);
-  for (int i=0; i<7; i++) digitalWrite(segments_small[i], LOW);
-  //digitalWrite(DP_small, state);
+  for (int i=0; i<7; i++) digitalWrite(segments_small[i], LOW);;
 }
-void setDigitToWrite_small(int poz, bool state)
-{
-   digitalWrite(digits_small[poz], !state);
-}
+void setDigitToWrite_small(int poz, bool state) {digitalWrite(digits_small[poz], !state);}
 
 bool digitMatrix_small[10][7]={
   {1, 1, 1, 1, 1, 1, 0},
