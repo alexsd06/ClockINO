@@ -16,9 +16,7 @@ void displayTime()
     displayTime();
   }
   int h1=hours/10, h2=hours%10, m1=mins/10, m2=mins%10;
-  int milli_current=millis()%100;
   int s1=secs/10, s2=secs%10;
-  //int mili1=milli_current/10, mili2=milli_current%10;
   if (h1==1||h1==2) displayNumber(0, h1); 
   displayNumber(1, h2); displayNumber(2, m1); displayNumber(3, m2);
   if (disabledSmall==false) {
@@ -27,8 +25,6 @@ void displayTime()
   }
   if (readSecs==true) showLowerLeftDot();
   if (readBrightness==true) showUpperLeftDot();
-  //displayNumber_small(2, mili1); displayNumber_small(3, mili2);
-
 }
 
 void setTime(int cif) {
@@ -92,8 +88,7 @@ void disableTimeReading()
 
 void increaseTime()
 {
-  ul micro=micros();
-  ul mili=micro/1000;
+  ul mili=millis();
   ul seconds=mili/1000;
   ul mins=seconds/60;
   if (readTime==false) {
