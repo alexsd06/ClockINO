@@ -64,12 +64,9 @@ void displayDuringReadTime()
 
 void display()
 {
-  if (readTime==false) {
-    if (disabled==false) displayTime();
-  }
-  else {
-    if (disabled==false) displayDuringReadTime();
-  }
+  if (disabled==true) return;
+  if (readTime==false) displayTime();
+  else displayDuringReadTime();
   if (readSecs==true) showLowerLeftDot();
   if (readBrightness==true) showUpperLeftDot();
   showColumn();
