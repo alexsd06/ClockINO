@@ -24,6 +24,10 @@ ul prevMili, prevSec, prevMin;
 
 void setup() {                
 
+  //Serial.begin(9600);
+  pinMode(13, OUTPUT); //Disable Onboard Pin 13 Light.
+  digitalWrite(13, LOW);
+
   pinMode(LIGHT_PIN, OUTPUT);
 
   initDisplay();
@@ -33,7 +37,6 @@ void setup() {
   setDisplayBrightness_small(500);
 
   initIr();
-  Serial.begin(9600);
   
   initTime();
 
