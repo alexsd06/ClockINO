@@ -78,7 +78,7 @@ void showColumn()
   disableDigits();
   enableControl1();
   digitalWrite(column, HIGH);
-  delayMicroseconds(DISPLAY_BRIGHTNESS/10);
+  delayMicroseconds(DISPLAY_BRIGHTNESS);
 }
 void hideColumn() {digitalWrite(column, LOW);}
 
@@ -113,7 +113,7 @@ void showLowerLeftDot()
   disableDigits();
   enableControl1();
   digitalWrite(lower_left_dot, HIGH);
-  delayMicroseconds(DISPLAY_BRIGHTNESS/10);
+  delayMicroseconds(DISPLAY_BRIGHTNESS);
 }
 void hideLowerLeftDot() {digitalWrite(lower_left_dot, LOW);}
 
@@ -122,7 +122,7 @@ void showUpperLeftDot()
   disableDigits();
   enableControl1();
   digitalWrite(upper_left_dot, HIGH);
-  delayMicroseconds(DISPLAY_BRIGHTNESS/10);
+  delayMicroseconds(DISPLAY_BRIGHTNESS);
 }
 void hideUpperLeftDot() {digitalWrite(upper_left_dot, LOW);}
 /*

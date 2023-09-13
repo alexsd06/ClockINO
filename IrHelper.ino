@@ -33,9 +33,9 @@ void decodeIr(String hexCode)
     }
 
     else if (hexCode=="a05f00ff") {readSecs=!readSecs;} //Info
-    else if (hexCode=="e11e00ff"&&readSecs==true) timeInSecs--; //Vol--
-    else if (hexCode=="a35c00ff"&&readSecs==true) timeInSecs++; //Vol++
-
+    else if (hexCode=="e11e00ff"&&readSecs==true) decreaseSeconds(); //Vol --
+    else if (hexCode=="a35c00ff"&&readSecs==true) increaseSeconds(); //Vol ++
+    
     else if (hexCode=="a75800ff") readBrightness=!readBrightness;//Fav
     else if (hexCode=="e41b00ff"&&readBrightness==true) { //Ch--
       if (getDisplayBrightness()-BR_CHG_RATE>=0) setDisplayBrightness(getDisplayBrightness()-BR_CHG_RATE);

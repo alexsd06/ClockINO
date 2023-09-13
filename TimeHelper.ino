@@ -1,3 +1,4 @@
+
 void initTime()
 {
   prevMili=millis();
@@ -7,14 +8,9 @@ void initTime()
 
 void displayTime()
 {
-  ul secs=timeInSecs%60;
-  ul mins=(timeInSecs/60)%60;
-  ul timeInMins=timeInSecs/60;
-  ul hours=timeInMins/60;
-  if (hours==24) {
-    timeInSecs=0;
-    displayTime();
-  }
+  ul secs=rtc.getSecond();
+  ul mins=rtc.getMinute();
+  ul hours=rtc.getHour();
   int h1=hours/10, h2=hours%10, m1=mins/10, m2=mins%10;
   int s1=secs/10, s2=secs%10;
   if (h1==1||h1==2) displayNumber(0, h1); 
@@ -70,6 +66,55 @@ void display()
   if (readSecs==true) showLowerLeftDot();
   if (readBrightness==true) showUpperLeftDot();
   showColumn();
+  disableDigits();
+}
+
+void decreaseSeconds() {
+  int secs=rtc.getSecond();
+  int mins=rtc.getMinute();
+  int hours=rtc.getHour();
+  
+  secs--;
+
+  if (secs<0) {
+    secs=59;
+    mins--;
+    if (mins<0) {
+      mins=59;
+      hours--;
+      if (hours<0) {
+        hours=23;
+      }
+    }
+  }
+
+  rtc.initClock();
+  rtc.setTime(hours, mins, secs);
+
+}
+
+void increaseSeconds() {
+  int secs=rtc.getSecond();
+  int mins=rtc.getMinute();
+  int hours=rtc.getHour();
+  
+  secs++;
+
+  if (secs>59) {
+    secs=0;
+    mins++;
+    if (mins>59) {
+      mins=0;
+      hours++;
+      if (hours>23) {
+        hours=0;
+      }
+    }
+  }
+
+  rtc.initClock();
+  rtc.setTime(hours, mins, secs);
+
 }
 
 void disableTimeReading()
@@ -78,24 +123,10 @@ void disableTimeReading()
     readTime=false;
     ul hours=digit1*10+digit2;
     ul mins=digit3*10+digit4;
-    timeInSecs=(hours*3600)+(mins*60);
+    rtc.initClock();
+    rtc.setTime(hours, mins, 0);
     digit1=0; digit2=0; digit3=0; digit4=0;
     poz=0;
   }
 }
 
-void increaseTime()
-{
-  ul micro=micros();
-  ul mili=micro/1000;
-  ul seconds=mili/1000;
-  ul mins=seconds/60;
-  if (readTime==false) {
-    if (seconds!=prevSec) {
-      timeInSecs++;
-    }
-  }
-  prevMili=mili;
-  prevSec=seconds;
-  prevMin=mins;
-}

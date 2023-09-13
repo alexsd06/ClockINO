@@ -1,10 +1,13 @@
 #include <IRremote.hpp>
+#include <Wire.h>
+#include <Rtc_Pcf8563.h>
+
 #define ul unsigned long
 
 bool readTime=false;
 int poz=0;
 int digit1=9, digit2=9, digit3=9, digit4=9;
-ul timeInSecs=0;
+//ul timeInSecs=0;
 
 bool disabled=false;
 bool disabledSmall=true;
@@ -21,6 +24,8 @@ int LIGHT_PIN=8;
 int count=0;
 
 ul prevMili, prevSec, prevMin;
+
+Rtc_Pcf8563 rtc;
 
 void setup() {                
 
@@ -45,5 +50,4 @@ void loop() {
   display();
   checkIr();
   disableTimeReading();
-  increaseTime();
 }
