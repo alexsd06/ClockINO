@@ -5,6 +5,7 @@
 #define ul unsigned long
 
 bool readTime=false;
+bool readAlarm=false;
 int poz=0;
 int digit1=9, digit2=9, digit3=9, digit4=9;
 //ul timeInSecs=0;
@@ -23,7 +24,8 @@ int RECV_PIN = 11;
 int LIGHT_PIN=8;
 int count=0;
 
-ul prevMili, prevSec, prevMin;
+bool ALARM_RUNNING=false;
+int BUZZER_PIN=A8;
 
 Rtc_Pcf8563 rtc;
 
@@ -42,11 +44,12 @@ void setup() {
   setDisplayBrightness_small(500);
 
   initIr();
-  
+  initBuzzer();
   initTime();
 
 }
 void loop() {
+  //Serial.println("RUNNING");
   display();
   checkIr();
   disableTimeReading();

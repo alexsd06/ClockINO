@@ -22,6 +22,18 @@ void decodeIr(String hexCode)
       blink(10, 100);
       disableDigits_small();
     }
+    else if (hexCode=="e51a00ff") { //Audio
+      digit1=0; digit2=0; digit3=0; digit4=0;
+      readAlarm=true;
+      digit1=0; digit2=0; digit3=0; digit4=0;
+      poz=0;
+      Serial.println("OK for Input");
+      blink(5, 100);
+      disableDigits_small();
+    }
+    else if (hexCode=="a45b00ff") { //Exit
+      ALARM_RUNNING=false;
+    }
     else if (hexCode=="b64900ff") { //Standby
       disabled=!disabled;
       disabledSmall=!disabledSmall;
@@ -51,7 +63,7 @@ void decodeIr(String hexCode)
       digitalWriteFast(LIGHT_PIN, lightState);
     }
 
-    else if (readTime==true) {
+    else if (readTime==true||readAlarm==true) {
       int cif=irToNumber(hexCode);
       setTime(cif);
     }

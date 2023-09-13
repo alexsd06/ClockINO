@@ -1,9 +1,8 @@
 
 void initTime()
 {
-  prevMili=millis();
-  prevSec=prevMili/1000;
-  prevMin=prevSec/60;
+  //rtc.enableAlarm();
+  //attachInterrupt(0, alarmIntrerrupt, FALLING);
 }
 
 void displayTime()
@@ -22,7 +21,7 @@ void displayTime()
 }
 
 void setTime(int cif) {
-  if (readTime==true&&cif!=-1) {
+  if ((readTime==true||readAlarm==true)&&cif!=-1) {
     if (poz==0&&cif>=0&&cif<=2) {
       digit1=cif;
       poz++;
@@ -61,10 +60,14 @@ void displayDuringReadTime()
 void display()
 {
   if (disabled==true) return;
-  if (readTime==false) displayTime();
+  if (readTime==false&&readAlarm==false) displayTime();
   else displayDuringReadTime();
   if (readSecs==true) showLowerLeftDot();
   if (readBrightness==true) showUpperLeftDot();
+  if (readAlarm==true) {
+    showLowerLeftDot();
+    showUpperLeftDot();
+  }
   showColumn();
   disableDigits();
 }
@@ -120,13 +123,34 @@ void increaseSeconds() {
 void disableTimeReading()
 {
   if (poz==4) {
-    readTime=false;
     ul hours=digit1*10+digit2;
     ul mins=digit3*10+digit4;
-    rtc.initClock();
-    rtc.setTime(hours, mins, 0);
+    if (readTime==true) {
+      readTime=false;
+      rtc.initClock();
+      rtc.setTime(hours, mins, 0);
+    }
+    if (readAlarm==true) {
+      readAlarm=false;
+      rtc.setAlarm(mins, hours, 100, 100);
+    }
     digit1=0; digit2=0; digit3=0; digit4=0;
     poz=0;
   }
 }
 
+void alarmIntrerrupt()
+{
+  ALARM_RUNNING=true;
+  //Serial.println("Alarm on");
+  rtc.clearAlarm();
+}
+
+void alarm() {
+  if (rtc.getSecond()%2==0) {
+    playBuzzer();
+  }
+  else {
+    stopBuzzer();
+  }
+}
