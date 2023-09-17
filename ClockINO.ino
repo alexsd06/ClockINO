@@ -1,6 +1,9 @@
+#define IR_USE_AVR_TIMER1
 #include <IRremote.hpp>
 #include <Wire.h>
-#include <Rtc_Pcf8563.h>
+#include "RTClib.h"
+
+#define YMD rtc.now().year(), rtc.now().month(), rtc.now().day()
 
 #define ul unsigned long
 
@@ -27,11 +30,11 @@ int count=0;
 bool ALARM_RUNNING=false;
 int BUZZER_PIN=A8;
 
-Rtc_Pcf8563 rtc;
+PCF8563 rtc;
 
 void setup() {                
 
-  //Serial.begin(9600);
+  Serial.begin(9600);
   pinMode(13, OUTPUT); //Disable Onboard Pin 13 Light.
   digitalWrite(13, LOW);
 
@@ -40,8 +43,8 @@ void setup() {
   initDisplay();
   initDisplayPins_small();
 
-  setDisplayBrightness(500);
-  setDisplayBrightness_small(500);
+  setDisplayBrightness(300);
+  setDisplayBrightness_small(300);
 
   initIr();
   initBuzzer();
@@ -53,4 +56,5 @@ void loop() {
   display();
   checkIr();
   disableTimeReading();
+  alarm();
 }

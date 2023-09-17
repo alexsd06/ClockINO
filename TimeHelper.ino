@@ -1,15 +1,16 @@
 
 void initTime()
 {
-  //rtc.enableAlarm();
-  //attachInterrupt(0, alarmIntrerrupt, FALLING);
+  Wire.begin();
+  rtc.begin();
 }
 
 void displayTime()
 {
-  ul secs=rtc.getSecond();
-  ul mins=rtc.getMinute();
-  ul hours=rtc.getHour();
+  int secs=rtc.now().second();
+  int mins=rtc.now().minute();
+  int hours=rtc.now().hour();
+
   int h1=hours/10, h2=hours%10, m1=mins/10, m2=mins%10;
   int s1=secs/10, s2=secs%10;
   if (h1==1||h1==2) displayNumber(0, h1); 
@@ -73,10 +74,10 @@ void display()
 }
 
 void decreaseSeconds() {
-  int secs=rtc.getSecond();
-  int mins=rtc.getMinute();
-  int hours=rtc.getHour();
-  
+  int secs=rtc.now().second();
+  int mins=rtc.now().minute();
+  int hours=rtc.now().hour();
+
   secs--;
 
   if (secs<0) {
@@ -91,15 +92,15 @@ void decreaseSeconds() {
     }
   }
 
-  rtc.initClock();
-  rtc.setTime(hours, mins, secs);
+  rtc.begin();
+  rtc.adjust(DateTime(YMD, hours, mins, secs));
 
 }
 
 void increaseSeconds() {
-  int secs=rtc.getSecond();
-  int mins=rtc.getMinute();
-  int hours=rtc.getHour();
+  int secs=rtc.now().second();
+  int mins=rtc.now().minute();
+  int hours=rtc.now().hour();
   
   secs++;
 
@@ -114,9 +115,9 @@ void increaseSeconds() {
       }
     }
   }
-
-  rtc.initClock();
-  rtc.setTime(hours, mins, secs);
+  //Year Month Day
+  rtc.begin();
+  rtc.adjust(DateTime(YMD, hours, mins, secs));
 
 }
 
@@ -127,30 +128,39 @@ void disableTimeReading()
     ul mins=digit3*10+digit4;
     if (readTime==true) {
       readTime=false;
-      rtc.initClock();
-      rtc.setTime(hours, mins, 0);
+      rtc.adjust(DateTime(YMD, hours, mins, 0));
     }
     if (readAlarm==true) {
       readAlarm=false;
-      rtc.setAlarm(mins, hours, 100, 100);
+      rtc.set_alarm(DateTime(YMD, hours, mins, 0), {1, 1, 0, 0});
+      //rtc.on_alarm();
     }
     digit1=0; digit2=0; digit3=0; digit4=0;
     poz=0;
   }
 }
 
-void alarmIntrerrupt()
+void disableAlarm()
 {
-  ALARM_RUNNING=true;
-  //Serial.println("Alarm on");
-  rtc.clearAlarm();
+  //TODO: Clear alarm values.
+  rtc.set_alarm(DateTime(YMD, -1, -1, -1), {1, 1, 0, 0});
+  stopBuzzer();
 }
 
-void alarm() {
-  if (rtc.getSecond()%2==0) {
-    playBuzzer();
+void checkAlarm()
+{
+  int h=rtc.now().hour(), m=rtc.now().minute();
+  int ah=rtc.get_alarm().hour(), am=rtc.get_alarm().minute();
+  if (h>=ah&&m>=am) {
+    ALARM_RUNNING=true;
   }
-  else {
-    stopBuzzer();
+}
+void alarm() {
+  checkAlarm();
+  Serial.println(rtc.get_alarm().hour());
+  Serial.println(rtc.get_alarm().minute());
+  if (ALARM_RUNNING==true) {;
+    //Serial.println("Alarm running");
+    blinkBuzzer();
   }
 }

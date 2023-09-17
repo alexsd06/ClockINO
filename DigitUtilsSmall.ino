@@ -22,7 +22,7 @@ E |   | C
 int segments_small[]={43, 44, 45, 46, 47, 48, 49};
 int digits_small[]={50, 51, 52, 53};
 int DP_small=42;
-int DISPLAY_BRIGHTNESS_small=500; //the smaller the number, the brighter the display
+int DISPLAY_BRIGHTNESS_small; //the smaller the number, the brighter the display
 
 void setDisplayBrightness_small(int br) {DISPLAY_BRIGHTNESS_small=br;}
 

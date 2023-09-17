@@ -33,6 +33,7 @@ void decodeIr(String hexCode)
     }
     else if (hexCode=="a45b00ff") { //Exit
       ALARM_RUNNING=false;
+      disableAlarm();
     }
     else if (hexCode=="b64900ff") { //Standby
       disabled=!disabled;
