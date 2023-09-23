@@ -32,7 +32,6 @@ void decodeIr(String hexCode)
       disableDigits_small();
     }
     else if (hexCode=="a45b00ff") { //Exit
-      ALARM_RUNNING=false;
       disableAlarm();
     }
     else if (hexCode=="b64900ff") { //Standby
@@ -62,6 +61,10 @@ void decodeIr(String hexCode)
     else if (hexCode=="e01f00ff") { //Light
       lightState=!lightState;
       digitalWriteFast(LIGHT_PIN, lightState);
+    }
+
+    else if (hexCode=="e91600ff") {
+      ALARM_RUNNING=!ALARM_RUNNING;
     }
 
     else if (readTime==true||readAlarm==true) {

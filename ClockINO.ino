@@ -52,7 +52,6 @@ void setup() {
 
 }
 void loop() {
-  //Serial.println("RUNNING");
   display();
   checkIr();
   disableTimeReading();

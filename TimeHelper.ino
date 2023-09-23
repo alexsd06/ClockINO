@@ -144,6 +144,7 @@ void disableAlarm()
 {
   //TODO: Clear alarm values.
   rtc.set_alarm(DateTime(YMD, -1, -1, -1), {1, 1, 0, 0});
+  ALARM_RUNNING=false;
   stopBuzzer();
 }
 
@@ -157,10 +158,6 @@ void checkAlarm()
 }
 void alarm() {
   checkAlarm();
-  Serial.println(rtc.get_alarm().hour());
-  Serial.println(rtc.get_alarm().minute());
-  if (ALARM_RUNNING==true) {;
-    //Serial.println("Alarm running");
-    blinkBuzzer();
-  }
+  if (ALARM_RUNNING==true) blinkBuzzer();
+  if (ALARM_RUNNING==false) disableAlarm();
 }
