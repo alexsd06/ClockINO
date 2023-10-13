@@ -33,10 +33,15 @@ void decodeIr(String hexCode)
     }
     else if (hexCode=="a45b00ff") { //Exit
       disableAlarm();
+      Serial<<"Now: "<<rtc.now().year()<<" "<<rtc.now().month()<<" "<<rtc.now().day()<<" "<<rtc.now().hour()<<" "<<rtc.now().minute()<<'\n';
+      Serial<<"Alarm: "<<rtc.get_alarm().year()<<" "<<rtc.get_alarm().month()<<" "<<rtc.get_alarm().day()<<" "<<rtc.get_alarm().hour()<<" "<<rtc.get_alarm().minute()<<'\n';
+      
     }
     else if (hexCode=="b64900ff") { //Standby
+      IR_REMOTE=!IR_REMOTE;
+      delay(20);
       disabled=!disabled;
-      disabledSmall=!disabledSmall;
+      //disabledSmall=!disabledSmall;
       disableDigits();
     }
 

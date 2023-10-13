@@ -1,11 +1,19 @@
 #define IR_USE_AVR_TIMER1
-#include <IRremote.hpp>
+#include <IRremote.hpp> //https://github.com/Arduino-IRremote/Arduino-IRremote
 #include <Wire.h>
-#include "RTClib.h"
-
+#include "RTClib.h" //https://github.com/NeiroNx/RTCLib
+//https://www.circuitbasics.com/how-to-setup-passive-infrared-pir-motion-sensors-on-the-arduino/
 #define YMD rtc.now().year(), rtc.now().month(), rtc.now().day()
 
 #define ul unsigned long
+
+template <typename T>
+Print& operator<<(Print& printer, T value)
+{
+    printer.print(value);
+    return printer;
+}
+
 
 bool readTime=false;
 bool readAlarm=false;
@@ -13,7 +21,7 @@ int poz=0;
 int digit1=9, digit2=9, digit3=9, digit4=9;
 //ul timeInSecs=0;
 
-bool disabled=false;
+bool disabled=true;
 bool disabledSmall=true;
 
 bool readSecs=false;
@@ -32,8 +40,10 @@ int BUZZER_PIN=A8;
 
 PCF8563 rtc;
 
-void setup() {                
+int PIR_PIN=A0;
+bool IR_REMOTE=false;
 
+void setup() {                
   Serial.begin(9600);
   pinMode(13, OUTPUT); //Disable Onboard Pin 13 Light.
   digitalWrite(13, LOW);
@@ -48,11 +58,17 @@ void setup() {
 
   initIr();
   initBuzzer();
+  initPir();
   initTime();
+
+  Serial<<"Now: "<<rtc.now().year()<<" "<<rtc.now().month()<<" "<<rtc.now().day()<<" "<<rtc.now().hour()<<" "<<rtc.now().minute()<<'\n';
+  Serial<<"Alarm: "<<rtc.get_alarm().year()<<" "<<rtc.get_alarm().month()<<" "<<rtc.get_alarm().day()<<" "<<rtc.get_alarm().hour()<<" "<<rtc.get_alarm().minute()<<'\n';
+      
 
 }
 void loop() {
   display();
+  checkPir();
   checkIr();
   disableTimeReading();
   alarm();

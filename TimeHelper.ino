@@ -1,4 +1,4 @@
-
+int months_days[]={0, 31, -1, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 void initTime()
 {
   Wire.begin();
@@ -132,8 +132,31 @@ void disableTimeReading()
     }
     if (readAlarm==true) {
       readAlarm=false;
-      rtc.set_alarm(DateTime(YMD, hours, mins, 0), {1, 1, 0, 0});
-      //rtc.on_alarm();
+      int year=rtc.now().year();
+      int month=rtc.now().month();
+      int day=rtc.now().day();
+      if (hours<rtc.now().hour()&&mins<rtc.now().minute()) {
+        if (year%4==0&&year%100!=0) months_days[2]=29; //bisect
+        else if (year%400==0) months_days[2]=29; //bisect
+        else months_days[2]=28; //normal
+        day++;
+        if (day>months_days[month]) {
+          day=1;
+          month++;
+        }
+        if (month>12) {
+          month=1;
+          year++;
+        }
+        Serial.print("Setted alarm for next day");
+      }
+      else {
+        Serial.println("Setted alarm for today");
+      }
+      rtc.set_alarm(DateTime(year, month, day, hours, mins, 0), {1, 1, 1, 1});
+      Serial<<"Now: "<<rtc.now().year()<<" "<<rtc.now().month()<<" "<<rtc.now().day()<<" "<<rtc.now().hour()<<" "<<rtc.now().minute()<<'\n';
+      Serial<<"Alarm: "<<rtc.get_alarm().year()<<" "<<rtc.get_alarm().month()<<" "<<rtc.get_alarm().day()<<" "<<rtc.get_alarm().hour()<<" "<<rtc.get_alarm().minute()<<'\n';
+      //TODO: Make it work at the end of the month and between years.
     }
     digit1=0; digit2=0; digit3=0; digit4=0;
     poz=0;
@@ -143,21 +166,20 @@ void disableTimeReading()
 void disableAlarm()
 {
   //TODO: Clear alarm values.
-  rtc.set_alarm(DateTime(YMD, -1, -1, -1), {1, 1, 0, 0});
+  rtc.set_alarm(DateTime(-1, -1, -1, -1, -1, -1), {1, 1, 0, 0});
   ALARM_RUNNING=false;
   stopBuzzer();
 }
 
 void checkAlarm()
 {
-  int h=rtc.now().hour(), m=rtc.now().minute();
-  int ah=rtc.get_alarm().hour(), am=rtc.get_alarm().minute();
-  if (h>=ah&&m>=am) {
+  int h=rtc.now().hour(), m=rtc.now().minute(), d=rtc.now().day(), mo=rtc.now().month(), y=rtc.now().year();
+  int ah=rtc.get_alarm().hour(), am=rtc.get_alarm().minute(), ad=rtc.get_alarm().day(), amo=rtc.get_alarm().month(), ay=rtc.get_alarm().year();
+  if (h>=ah&&m>=am&&d>=ad) {//&&mo>=amo&&y>=ay) {
     ALARM_RUNNING=true;
   }
 }
 void alarm() {
   checkAlarm();
   if (ALARM_RUNNING==true) blinkBuzzer();
-  if (ALARM_RUNNING==false) disableAlarm();
 }
