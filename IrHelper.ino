@@ -49,21 +49,24 @@ void decodeIr(String hexCode)
       disabledSmall=!disabledSmall;
     }
 
-    else if (hexCode=="a05f00ff") {readSecs=!readSecs;} //Info
+    else if (hexCode=="a05f00ff") readSecs=!readSecs; //Info
     else if (hexCode=="e11e00ff"&&readSecs==true) decreaseSeconds(); //Vol --
     else if (hexCode=="a35c00ff"&&readSecs==true) increaseSeconds(); //Vol ++
-    
-    else if (hexCode=="a75800ff") readBrightness=!readBrightness;//Fav
+    /*
+    //else if (hexCode=="a75800ff") readBrightness=!readBrightness;//Fav
     else if (hexCode=="e41b00ff"&&readBrightness==true) { //Ch--
       if (getDisplayBrightness()-BR_CHG_RATE>=0) setDisplayBrightness(getDisplayBrightness()-BR_CHG_RATE);
       if (getDisplayBrightness_small()-BR_CHG_RATE>=0) setDisplayBrightness_small(getDisplayBrightness_small()-BR_CHG_RATE);
-    } 
+    }
     else if (hexCode=="a15e00ff"&&readBrightness==true) { //Ch++
       setDisplayBrightness(getDisplayBrightness()+BR_CHG_RATE);
       setDisplayBrightness_small(getDisplayBrightness_small()+BR_CHG_RATE);
     }
-    
-    else if (hexCode=="e01f00ff") { //Light
+    */
+    else if (hexCode=="a75800ff") readHours=!readHours;//Fav
+    else if (hexCode=="e41b00ff"&&readHours==true) decreaseHours(); //Ch--
+    else if (hexCode=="a15e00ff"&&readHours==true) increaseHours(); //Ch++
+    else if (hexCode=="e01f00ff") { //OK
       lightState=!lightState;
       digitalWriteFast(LIGHT_PIN, lightState);
     }

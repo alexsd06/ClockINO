@@ -64,13 +64,36 @@ void display()
   if (readTime==false&&readAlarm==false) displayTime();
   else displayDuringReadTime();
   if (readSecs==true) showLowerLeftDot();
-  if (readBrightness==true) showUpperLeftDot();
+  //if (readBrightness==true) showUpperLeftDot();
+  if (readHours==true) showUpperLeftDot();
   if (readAlarm==true) {
     showLowerLeftDot();
     showUpperLeftDot();
   }
   showColumn();
   disableDigits();
+}
+
+void decreaseHours()
+{
+  int secs=rtc.now().second();
+  int mins=rtc.now().minute();
+  int hours=rtc.now().hour();
+  hours--;
+  if (hours<0) hours=23;
+  rtc.begin();
+  rtc.adjust(DateTime(YMD, hours, mins, secs));
+}
+
+void increaseHours()
+{
+  int secs=rtc.now().second();
+  int mins=rtc.now().minute();
+  int hours=rtc.now().hour();
+  hours++;
+  if (hours>23) hours=0;
+  rtc.begin();
+  rtc.adjust(DateTime(YMD, hours, mins, secs));
 }
 
 void decreaseSeconds() {

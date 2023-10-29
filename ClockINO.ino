@@ -25,7 +25,8 @@ bool disabled=true;
 bool disabledSmall=true;
 
 bool readSecs=false;
-bool readBrightness=false;
+//bool readBrightness=false;
+bool readHours=false;
 
 bool lightState=false;
 
