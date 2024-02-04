@@ -71,7 +71,7 @@ void decodeIr(String hexCode)
       digitalWriteFast(LIGHT_PIN, lightState);
     }
 
-    else if (hexCode=="e91600ff") {
+    else if (hexCode=="e91600ff") { //Recall
       ALARM_RUNNING=!ALARM_RUNNING;
     }
 
