@@ -2,7 +2,7 @@ int turnedOn[28]; //maxim 14 + turnedOn[0] care retine dimensiunea
 
 int DISPLAY_BRIGHTNESS;
 int controls[]={39, 40};
-////////////////0  1  2  3  4  5  6  7  8   9   10  11  12  13
+////////////////0   1   2   3   4   5   6   7   8   9   10  11  12  13
 int segments[]={24, 25, 26, 27, 28, 30, 31, 32, 33, 34, 35, 36, 37, 38};
 
 String segmentCodes[4][7]={ ///codes[digit][segment(as index of segments)]="activation code";
