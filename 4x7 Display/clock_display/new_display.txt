@@ -8,16 +8,15 @@ SB6052N (on top)
 
 - EMPTY
 -
--
-
-3. - Punct stanga jos (Digital 22)
-4. - Punct stanga sus (Digital 23)
-5. - D0, B- (Digital 24)
-6. - D0, GA (Digital 25)
-7. - D0, ED (Digital 26)
-8. - D0C, D1E (Digital 27)
-9. - D1, BG (Digital 28)
-10.- Something (Digital 29)
+- - 74HC595: Chain PIN.
+3. - Punct stanga jos (Digital 22) - 74HC595: Reset pin. Ignore it. - O7
+4. - Punct stanga sus (Digital 23)  - 74HC595: Register Clock - O6
+5. - D0, B- (Digital 24) - 74HC595: Latch Clock - O5
+6. - D0, GA (Digital 25) - 74HC595: Output Enabled: digitalWrite(25, LOW); - O4
+7. - D0, ED (Digital 26) - 74HC595: Data Serial Pin - O3
+8. - D0C, D1E (Digital 27) - 74HC595: Output 0. Ignore it. - O2
+9. - D1, BG (Digital 28) - 74HC595: 5V - O1
+/* EMPTY*/ 10.- Something (Digital 29)
 11.- D1, CD (Digital 30)
 12.- D1, AF (Digital 31)
 

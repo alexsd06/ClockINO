@@ -21,7 +21,7 @@ int poz=0;
 int digit1=9, digit2=9, digit3=9, digit4=9;
 //ul timeInSecs=0;
 
-bool disabled=true;
+bool disabled=true; //true
 bool disabledSmall=true;
 
 bool readSecs=false;

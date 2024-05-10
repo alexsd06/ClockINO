@@ -1,3 +1,5 @@
+#include <ShiftRegister74HC595.h>
+
 int turnedOn[28]; //maxim 14 + turnedOn[0] care retine dimensiunea
 
 int DISPLAY_BRIGHTNESS;
@@ -24,7 +26,9 @@ int upper_left_dot=23;
 void initDisplay()
 {
   for (int i=0; i<sizeof(controls)/sizeof(int); i++) pinMode(controls[i], OUTPUT);
-  for (int i=0; i<sizeof(segments)/sizeof(int); i++) pinMode(segments[i], OUTPUT);
+  for (int i=0; i<sizeof(segments)/sizeof(int); i++) {
+    if (segments[i]>=39||segments[i]==30||segments[i]==31) pinMode(segments[i], OUTPUT);
+  }
   for (int i=0; i<sizeof(turnedOn)/sizeof(int); i++) turnedOn[i]=0;
   pinMode(column, OUTPUT);
   pinMode(lower_left_dot, OUTPUT);
@@ -48,12 +52,48 @@ void enableControl1() {
 void disableControl0() {digitalWrite(controls[0], HIGH);}
 void disableControl1() {digitalWrite(controls[1], HIGH);}
 
+const int numberOfShiftRegisters = 2; // number of shift registers attached in series
+const int serialDataPin = 26; // DS
+const int clockPin = 23; // SHCP
+const int latchPin = 24; // STCP
+ShiftRegister74HC595<numberOfShiftRegisters> sr(serialDataPin, clockPin, latchPin);
+
+int getRealPin(int pin) {
+   if (pin<30) {
+    int endPin=29-pin;
+    return endPin;
+   } else if (pin>31&&pin<39) {
+    int endPin=39-pin+7+1;
+    return endPin;
+   } else {
+    return pin;
+   }
+}
+
 void turnOnSegmentPin(int pin) {
-  digitalWrite(pin, HIGH);
+  if (pin<30) {
+    int endPin=29-pin;
+    sr.set(endPin, HIGH);
+    //Serial.println("HERE");
+  } else if (pin>31&&pin<39) {
+    int endPin=39-pin+7+1;
+    sr.set(endPin, HIGH);
+    //Serial.println(endPin);
+  } else {
+    digitalWrite(pin, HIGH);
+  }
   turnedOn[++turnedOn[0]]=pin;
 }
 void turnOffSegmentPin(int pin) {
-  digitalWrite(pin, LOW);
+  if (pin<30) {
+    int endPin=29-pin;
+    sr.set(endPin, LOW);
+  } else if (pin>31&&pin<39) {
+    int endPin=39-pin+7+1;
+    sr.set(endPin, LOW);
+  } else {
+    digitalWrite(pin, LOW);
+  }
 }
 
 void disableDigits()
@@ -82,6 +122,52 @@ void showColumn()
 }
 void hideColumn() {digitalWrite(column, LOW);}
 
+int control0Pins[105];
+int control1Pins[105];
+
+void sortArray(int arr[])
+{
+  for (int i=1; i<arr[0]; i++) {
+    for (int j=i+1; j<=arr[0]; j++) {
+      if (arr[i]>arr[j]) {
+        int c=arr[i]; arr[i]=arr[j]; arr[j]=c;
+      }
+    }
+  }
+}
+
+void resetControlArrays()
+{
+  control0Pins[0]=0;
+  control1Pins[0]=0;
+}
+
+void displayControlArrays()
+{
+  for (int i=1; i<=control0Pins[0]; i++) {
+    control0Pins[i]=getRealPin(control0Pins[i]);
+  } 
+  for (int i=1; i<=control1Pins[0]; i++) {
+    control1Pins[i]=getRealPin(control1Pins[i]);
+  }
+  //TODO: Send all pins on control 0 and 1 at once to the shift registers!
+  sortArray(control0Pins); sortArray(control1Pins);
+  disableDigits();
+  enableControl0();
+  for (int i=1; i<=control0Pins[0]; i++) {
+    turnOnSegmentPin(control0Pins[i]);
+  }
+  delayMicroseconds(DISPLAY_BRIGHTNESS);
+  disableControl0(); 
+  disableDigits();
+  enableControl1();
+  for (int i=1; i<=control1Pins[0]; i++) {
+    turnOnSegmentPin(control1Pins[i]);
+  }
+  delayMicroseconds(DISPLAY_BRIGHTNESS);
+  disableControl1();
+  resetControlArrays();
+}
 
 int turnOnSegment(int poz, char seg) {
   int segCode=(int)(seg-'A');
@@ -91,10 +177,19 @@ int turnOnSegment(int poz, char seg) {
   if (hyphenIndex!=-1) {
     int control=activationCode.substring(0, hyphenIndex).toInt();
     int segmentArrayIndex=activationCode.substring(hyphenIndex+1).toInt();
+    
     disableDigits();
-    if (control==0) enableControl0();
-    if (control==1) enableControl1();
-    turnOnSegmentPin(segments[segmentArrayIndex]);
+    
+    int pin=segments[segmentArrayIndex];
+    if (control==0) {
+      enableControl0();
+      control0Pins[++control0Pins[0]]=pin;
+    }
+    if (control==1) {
+      enableControl1();
+      control1Pins[++control1Pins[0]]=pin;
+    }
+    turnOnSegmentPin(pin);
     delayMicroseconds(DISPLAY_BRIGHTNESS);
   }
 }
