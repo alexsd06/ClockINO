@@ -22,13 +22,13 @@ SB6052N (on top)
 
 13.- EMPTY
 
-14.- D2, FA (Digital 32)
-15.- D2, GB (Digital 33)
-16.- D2, DC (Digital 34)
-17.- D2E, D3E (Digital 35)
-18.- D3, BG (Digital 36)
-19.- D3, CD (37)
-20.- D3, AF (38)
+14.- D2, FA (Digital 32) - O14 - 7
+15.- D2, GB (Digital 33) - O13 -6
+16.- D2, DC (Digital 34) - O12 -5
+17.- D2E, D3E (Digital 35) - O11 -4
+18.- D3, BG (Digital 36) - O10 -3
+19.- D3, CD (37) - O9 -2
+20.- D3, AF (38) - O8 -1
 
 - EMPTY
 -

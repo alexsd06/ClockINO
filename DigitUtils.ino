@@ -52,18 +52,15 @@ void enableControl1() {
 void disableControl0() {digitalWrite(controls[0], HIGH);}
 void disableControl1() {digitalWrite(controls[1], HIGH);}
 
-const int numberOfShiftRegisters = 2; // number of shift registers attached in series
-const int serialDataPin = 26; // DS
-const int clockPin = 23; // SHCP
-const int latchPin = 24; // STCP
-ShiftRegister74HC595<numberOfShiftRegisters> sr(serialDataPin, clockPin, latchPin);
+//ShiftRegister74HC595<numberOfShiftRegisters> sr(serialDataPin, clockPin, latchPin);
 
 int getRealPin(int pin) {
+  //Serial.println("HERE");
    if (pin<30) {
     int endPin=29-pin;
     return endPin;
    } else if (pin>31&&pin<39) {
-    int endPin=39-pin+7+1;
+    int endPin=39-pin+7+1; //+1
     return endPin;
    } else {
     return pin;
@@ -73,26 +70,24 @@ int getRealPin(int pin) {
 void turnOnSegmentPin(int pin) {
   if (pin<30) {
     int endPin=29-pin;
-    sr.set(endPin, HIGH);
-    //Serial.println("HERE");
+    //sr.set(endPin, HIGH);
   } else if (pin>31&&pin<39) {
     int endPin=39-pin+7+1;
-    sr.set(endPin, HIGH);
-    //Serial.println(endPin);
+    //sr.set(endPin, HIGH);
   } else {
-    digitalWrite(pin, HIGH);
+    //digitalWrite(pin, HIGH);
   }
   turnedOn[++turnedOn[0]]=pin;
 }
 void turnOffSegmentPin(int pin) {
   if (pin<30) {
     int endPin=29-pin;
-    sr.set(endPin, LOW);
+    //sr.set(endPin, LOW);
   } else if (pin>31&&pin<39) {
     int endPin=39-pin+7+1;
-    sr.set(endPin, LOW);
+    //sr.set(endPin, LOW);
   } else {
-    digitalWrite(pin, LOW);
+    //digitalWrite(pin, LOW);
   }
 }
 
@@ -136,36 +131,71 @@ void sortArray(int arr[])
   }
 }
 
+int control0Bits[21], real0Pins[105];
+int control1Bits[21], real1Pins[105];
+
 void resetControlArrays()
 {
-  control0Pins[0]=0;
-  control1Pins[0]=0;
+  for (int i=18; i>=0; i--) {
+    control0Bits[i]=0;
+    control1Bits[i]=0;
+  }
+  control0Pins[0]=0; real0Pins[0]=0;
+  control1Pins[0]=0; real1Pins[0]=0;
+  
 }
-
 void displayControlArrays()
 {
+  /*
   for (int i=1; i<=control0Pins[0]; i++) {
-    control0Pins[i]=getRealPin(control0Pins[i]);
+    int pin=control0Pins[i];
+    int realPin=getRealPin(pin);
+    if (pin!=realPin) {
+      control0Bits[realPin]=1;
+    } else {
+      real0Pins[++real0Pins[0]]=pin;
+    }
   } 
   for (int i=1; i<=control1Pins[0]; i++) {
-    control1Pins[i]=getRealPin(control1Pins[i]);
+    int pin=control1Pins[i];
+    int realPin=getRealPin(pin);
+    if (pin!=realPin) {
+      control1Bits[realPin]=1;
+    } else {
+      real1Pins[++real1Pins[0]]=pin;
+    }
   }
-  //TODO: Send all pins on control 0 and 1 at once to the shift registers!
-  sortArray(control0Pins); sortArray(control1Pins);
-  disableDigits();
-  enableControl0();
-  for (int i=1; i<=control0Pins[0]; i++) {
-    turnOnSegmentPin(control0Pins[i]);
+  */
+
+  for (int i=18; i>=0; i--) { //17
+    digitalWrite(regy.ds, control0Bits[i]);
+    pulseClock(regy);
   }
-  delayMicroseconds(DISPLAY_BRIGHTNESS);
-  disableControl0(); 
-  disableDigits();
-  enableControl1();
-  for (int i=1; i<=control1Pins[0]; i++) {
-    turnOnSegmentPin(control1Pins[i]);
+  pulseLatch(regy);
+  delayMicroseconds(10); enableControl0(); delayMicroseconds(10);
+  for (int i=1; i<=real0Pins[0]; i++) {
+    digitalWrite(real0Pins[i], HIGH);
   }
-  delayMicroseconds(DISPLAY_BRIGHTNESS);
-  disableControl1();
+  delayMicroseconds(5000);
+  for (int i=1; i<=real0Pins[0]; i++) digitalWrite(real0Pins[i], LOW);
+  resetRegisters(regy, 2);
+  delayMicroseconds(10); disableControl0(); delayMicroseconds(10);
+  
+  for (int i=18; i>=0; i--) { //17
+    digitalWrite(regy.ds, control1Bits[i]);
+    pulseClock(regy);
+  }
+  pulseLatch(regy);
+  delayMicroseconds(10); enableControl1(); delayMicroseconds(10);
+  for (int i=1; i<=real1Pins[0]; i++) {
+    digitalWrite(real1Pins[i], HIGH);
+  }
+  delayMicroseconds(5000);
+  for (int i=1; i<=real1Pins[0]; i++) digitalWrite(real1Pins[i], LOW);
+  resetRegisters(regy, 2); 
+  //TODO: Make it so resetRegisters is not necessary by pushing old data out of the registers before switching controls.
+  delayMicroseconds(10); disableControl1(); delayMicroseconds(10);
+
   resetControlArrays();
 }
 
@@ -178,19 +208,36 @@ int turnOnSegment(int poz, char seg) {
     int control=activationCode.substring(0, hyphenIndex).toInt();
     int segmentArrayIndex=activationCode.substring(hyphenIndex+1).toInt();
     
-    disableDigits();
+    //disableDigits();
     
     int pin=segments[segmentArrayIndex];
     if (control==0) {
       enableControl0();
       control0Pins[++control0Pins[0]]=pin;
+
+      int pin=control0Pins[control0Pins[0]];
+      int realPin=getRealPin(pin);
+      if (pin!=realPin) {
+        control0Bits[realPin]=1;
+      } else {
+        real0Pins[++real0Pins[0]]=pin;
+      }
     }
     if (control==1) {
       enableControl1();
       control1Pins[++control1Pins[0]]=pin;
+
+      int pin=control1Pins[control1Pins[0]];
+      int realPin=getRealPin(pin);
+      if (pin!=realPin) {
+        control1Bits[realPin]=1;
+      } else {
+        real1Pins[++real1Pins[0]]=pin;
+      }
+
     }
-    turnOnSegmentPin(pin);
-    delayMicroseconds(DISPLAY_BRIGHTNESS);
+    //turnOnSegmentPin(pin);
+    //delayMicroseconds(DISPLAY_BRIGHTNESS);
   }
 }
 

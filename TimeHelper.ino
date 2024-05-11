@@ -15,7 +15,7 @@ void displayTime()
   int s1=secs/10, s2=secs%10;
   if (h1==1||h1==2) displayNumber(0, h1); 
   displayNumber(1, h2); displayNumber(2, m1); displayNumber(3, m2);
-  //displayControlArrays();
+  displayControlArrays();
   resetControlArrays();
   if (disabledSmall==false) {
     displayNumber_small(0, s1); 

@@ -4,7 +4,6 @@
 #include "RTClib.h" //https://github.com/NeiroNx/RTCLib
 //https://www.circuitbasics.com/how-to-setup-passive-infrared-pir-motion-sensors-on-the-arduino/
 #define YMD rtc.now().year(), rtc.now().month(), rtc.now().day()
-
 #define ul unsigned long
 
 template <typename T>
@@ -61,6 +60,8 @@ void setup() {
   initBuzzer();
   initPir();
   initTime();
+
+  initClockINORegisters();
 
   Serial<<"Now: "<<rtc.now().year()<<" "<<rtc.now().month()<<" "<<rtc.now().day()<<" "<<rtc.now().hour()<<" "<<rtc.now().minute()<<'\n';
   Serial<<"Alarm: "<<rtc.get_alarm().year()<<" "<<rtc.get_alarm().month()<<" "<<rtc.get_alarm().day()<<" "<<rtc.get_alarm().hour()<<" "<<rtc.get_alarm().minute()<<'\n';
