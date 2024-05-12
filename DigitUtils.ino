@@ -172,14 +172,18 @@ void displayControlArrays()
     pulseClock(regy);
   }
   pulseLatch(regy);
-  delayMicroseconds(10); enableControl0(); delayMicroseconds(10);
+  //delayMicroseconds(10); 
+  enableControl0(); 
+  //delayMicroseconds(10);
   for (int i=1; i<=real0Pins[0]; i++) {
     digitalWrite(real0Pins[i], HIGH);
   }
-  delayMicroseconds(5000);
+  delayMicroseconds(DISPLAY_BRIGHTNESS);
   for (int i=1; i<=real0Pins[0]; i++) digitalWrite(real0Pins[i], LOW);
   resetRegisters(regy, 2);
-  delayMicroseconds(10); disableControl0(); delayMicroseconds(10);
+  //delayMicroseconds(10); 
+  disableControl0(); 
+  //delayMicroseconds(10);
   
   for (int i=18; i>=0; i--) { //17
     digitalWrite(regy.ds, control1Bits[i]);
@@ -190,11 +194,13 @@ void displayControlArrays()
   for (int i=1; i<=real1Pins[0]; i++) {
     digitalWrite(real1Pins[i], HIGH);
   }
-  delayMicroseconds(5000);
+  delayMicroseconds(DISPLAY_BRIGHTNESS);
   for (int i=1; i<=real1Pins[0]; i++) digitalWrite(real1Pins[i], LOW);
   resetRegisters(regy, 2); 
   //TODO: Make it so resetRegisters is not necessary by pushing old data out of the registers before switching controls.
-  delayMicroseconds(10); disableControl1(); delayMicroseconds(10);
+  //delayMicroseconds(10); 
+  disableControl1(); 
+  //delayMicroseconds(10);
 
   resetControlArrays();
 }

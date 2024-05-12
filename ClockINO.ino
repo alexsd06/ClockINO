@@ -53,7 +53,7 @@ void setup() {
   initDisplay();
   initDisplayPins_small();
 
-  setDisplayBrightness(300);
+  setDisplayBrightness(3000);
   setDisplayBrightness_small(300);
 
   initIr();
