@@ -1,93 +1,119 @@
-void initIr() {IrReceiver.begin(RECV_PIN);}
-
-int irToNumber(String hexCode)
-{
-  //////////////////////    0            1           2          3           4           5           6           7           8            9
-  String codeArray[10]={"a55a00ff", "b24d00ff", "b14e00ff", "b04f00ff", "ae5100ff", "ad5200ff", "ac5300ff", "aa5500ff", "a95600ff", "a85700ff"};
-  Serial.println(hexCode);
-  for (int i=0; i<10; i++) {
-    if (hexCode==codeArray[i])
-      return i;
-  }
-  return -1;
+void initIr() {
+  IrReceiver.begin(RECV_PIN);
+  Serial.print(F("[OK] Launching Remote IR Sensor on pin: "));
+  Serial.println(RECV_PIN);
 }
-
-void decodeIr(String hexCode)
+#define zero 2774139135
+#define one 2991390975
+#define two 2974679295
+#define three 2957967615
+#define four 2924544255
+#define five 2907832575
+#define six 2891120895
+#define seven 2857697535
+#define eight 2840985855
+#define nine 2824274175
+int irToNumber(ul rawData)
 {
-  if (hexCode=="a65900ff") {  //Menu
+  int cif=-1;
+  switch (rawData) {
+    case zero:
+      cif=0; break;
+    case one:
+      cif=1; break;
+    case two:
+      cif=2; break;
+    case three:
+      cif=3; break;
+    case four:
+      cif=4; break;
+    case five:
+      cif=5; break;
+    case six:
+      cif=6; break;
+    case seven:
+      cif=7; break;
+    case eight:
+      cif=8; break;
+    case nine:
+      cif=9; break;
+  }
+  Serial.print(F("[OK] IRremote read cif: "));
+  Serial.println(cif);
+  return cif;
+}
+#define menu 2790850815
+#define audio 3843686655
+#define exit 2757427455
+#define standby 3058237695
+#define mute 3024814335
+#define info 2690580735
+#define volminus 3776839935
+#define volplus 2740715775
+#define fav 2807562495
+#define chminus 3826974975
+#define chplus 2707292415
+#define ok 3760128255
+#define recall 3910533375
+void decodeIr(ul rawData)
+{
+  switch (rawData) {
+    case menu:
       readTime=true;
       digit1=0; digit2=0; digit3=0; digit4=0;
       poz=0;
-      Serial.println("OK for Input");
-      blink(10, 100);
-      disableDigits_small();
-    }
-    else if (hexCode=="e51a00ff") { //Audio
+      Serial.println(F("[OK] Ready for Clock Input!"));
+      blink(5, 200);
+      break;
+    case audio:
       digit1=0; digit2=0; digit3=0; digit4=0;
       readAlarm=true;
-      digit1=0; digit2=0; digit3=0; digit4=0;
       poz=0;
-      Serial.println("OK for Input");
-      blink(5, 100);
-      disableDigits_small();
-    }
-    else if (hexCode=="a45b00ff") { //Exit
+      Serial.println(F("[OK] Ready for Alarm Input!"));
+      blink(5, 200);
+      break;
+    case exit:
       disableAlarm();
-      Serial<<"Now: "<<rtc.now().year()<<" "<<rtc.now().month()<<" "<<rtc.now().day()<<" "<<rtc.now().hour()<<" "<<rtc.now().minute()<<'\n';
-      Serial<<"Alarm: "<<rtc.get_alarm().year()<<" "<<rtc.get_alarm().month()<<" "<<rtc.get_alarm().day()<<" "<<rtc.get_alarm().hour()<<" "<<rtc.get_alarm().minute()<<'\n';
-      
-    }
-    else if (hexCode=="b64900ff") { //Standby
+      break;
+    case standby:
       IR_REMOTE=!IR_REMOTE;
       delay(20);
       disabled=!disabled;
-      //disabledSmall=!disabledSmall;
-      disableDigits();
-    }
-
-    else if (hexCode=="b44b00ff") { //Mute
-      disabledSmall=!disabledSmall;
-    }
-
-    else if (hexCode=="a05f00ff") readSecs=!readSecs; //Info
-    else if (hexCode=="e11e00ff"&&readSecs==true) decreaseSeconds(); //Vol --
-    else if (hexCode=="a35c00ff"&&readSecs==true) increaseSeconds(); //Vol ++
-    /*
-    //else if (hexCode=="a75800ff") readBrightness=!readBrightness;//Fav
-    else if (hexCode=="e41b00ff"&&readBrightness==true) { //Ch--
-      if (getDisplayBrightness()-BR_CHG_RATE>=0) setDisplayBrightness(getDisplayBrightness()-BR_CHG_RATE);
-      if (getDisplayBrightness_small()-BR_CHG_RATE>=0) setDisplayBrightness_small(getDisplayBrightness_small()-BR_CHG_RATE);
-    }
-    else if (hexCode=="a15e00ff"&&readBrightness==true) { //Ch++
-      setDisplayBrightness(getDisplayBrightness()+BR_CHG_RATE);
-      setDisplayBrightness_small(getDisplayBrightness_small()+BR_CHG_RATE);
-    }
-    */
-    else if (hexCode=="a75800ff") readHours=!readHours;//Fav
-    else if (hexCode=="e41b00ff"&&readHours==true) decreaseHours(); //Ch--
-    else if (hexCode=="a15e00ff"&&readHours==true) increaseHours(); //Ch++
-    else if (hexCode=="e01f00ff") { //OK
+      //disableDigits();
+      break;
+    case mute:
+      disabledSmall=!disabledSmall; break;
+    case info:
+      readSecs=!readSecs; break;
+    case volminus:
+      decreaseSeconds(); break;
+    case volplus:
+      increaseSeconds(); break;
+    case fav:
+      readHours=!readHours; break;
+    case chminus:
+      decreaseHours(); break;
+    case chplus:
+      increaseHours(); break;
+    case ok:
       lightState=!lightState;
       digitalWriteFast(LIGHT_PIN, lightState);
-    }
-
-    else if (hexCode=="e91600ff") { //Recall
-      ALARM_RUNNING=!ALARM_RUNNING;
-    }
-
-    else if (readTime==true||readAlarm==true) {
-      int cif=irToNumber(hexCode);
+      break;
+    case recall:
+      ALARM_RUNNING=!ALARM_RUNNING; break;
+  }
+  if (readTime==true||readAlarm==true) {
+      int cif=irToNumber(rawData);
       setTime(cif);
-    }
+  }
 }
 void checkIr()
 {
   if (IrReceiver.decode()) {
-      unsigned long rawData=IrReceiver.decodedIRData.decodedRawData;
+      ul rawData=IrReceiver.decodedIRData.decodedRawData;
       IrReceiver.resume(); // Enable receiving of the next value
       if (rawData==0) return;
-      String hexCode=String(rawData, HEX);
-      Serial.println(hexCode);
-      decodeIr(hexCode);
+      Serial.print(F("[OK] Remote IR Raw Data: ")); Serial.println(rawData);
+      decodeIr(rawData);
   }
 } 

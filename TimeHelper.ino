@@ -15,12 +15,6 @@ void displayTime()
   int s1=secs/10, s2=secs%10;
   if (h1==1||h1==2) displayNumber(0, h1); 
   displayNumber(1, h2); displayNumber(2, m1); displayNumber(3, m2);
-  displayControlArrays();
-  resetControlArrays();
-  if (disabledSmall==false) {
-    displayNumber_small(0, s1); 
-    displayNumber_small(1, s2); 
-  }
 }
 
 void setTime(int cif) {
@@ -63,15 +57,30 @@ void displayDuringReadTime()
 void display()
 {
   if (disabled==true) return;
-  if (readTime==false&&readAlarm==false) displayTime();
-  else displayDuringReadTime();
-  if (readSecs==true) showLowerLeftDot();
-  //if (readBrightness==true) showUpperLeftDot();
-  if (readHours==true) showUpperLeftDot();
+  if (readTime==false&&readAlarm==false) {
+    displayTime();
+  }
+  else {
+    displayDuringReadTime();
+  }
+  if (readSecs==true) {
+    showLowerLeftDot();
+  }
+  if (readHours==true) {
+    showUpperLeftDot();
+  }
   if (readAlarm==true) {
     showLowerLeftDot();
     showUpperLeftDot();
   }
+  //////////////////////////
+  if (!readAlarm&&!readSecs) {
+    hideLowerLeftDot();
+  }
+  if (!readAlarm&&!readHours) {
+    hideUpperLeftDot();
+  }
+  /////////////////////////
   showColumn();
   disableDigits();
 }
@@ -173,15 +182,15 @@ void disableTimeReading()
           month=1;
           year++;
         }
-        Serial.print("Setted alarm for next day");
+        Serial.print(F("[OK] Setted alarm for next day!"));
       }
       else {
-        Serial.println("Setted alarm for today");
+        Serial.println(F("[OK] Setted alarm for today!"));
       }
       rtc.set_alarm(DateTime(year, month, day, hours, mins, 0), {1, 1, 1, 1});
-      Serial<<"Now: "<<rtc.now().year()<<" "<<rtc.now().month()<<" "<<rtc.now().day()<<" "<<rtc.now().hour()<<" "<<rtc.now().minute()<<'\n';
-      Serial<<"Alarm: "<<rtc.get_alarm().year()<<" "<<rtc.get_alarm().month()<<" "<<rtc.get_alarm().day()<<" "<<rtc.get_alarm().hour()<<" "<<rtc.get_alarm().minute()<<'\n';
-      //TODO: Make it work at the end of the month and between years.
+      Serial<<F("Now: ")<<rtc.now().year()<<F(" ")<<rtc.now().month()<<F(" ")<<rtc.now().day()<<F(" ")<<rtc.now().hour()<<F(" ")<<rtc.now().minute()<<F("\n");
+      Serial<<F("Alarm: ")<<rtc.get_alarm().year()<<F(" ")<<rtc.get_alarm().month()<<F(" ")<<rtc.get_alarm().day()<<F(" ")<<rtc.get_alarm().hour()<<F(" ")<<rtc.get_alarm().minute()<<F("\n");
+     //TODO: Make it work at the end of the month and between years.
     }
     digit1=0; digit2=0; digit3=0; digit4=0;
     poz=0;

@@ -3,9 +3,9 @@
 struct ShiftRegister {int ds, shcp, stcp, srclr; /*SRCLR can be -1; */ };
 struct ShiftRegister regy;
 const int numberOfShiftRegisters = 2; // number of shift registers attached in series
-const int serialDataPin = 26; // DS
-const int clockPin = 23; // SHCP
-const int latchPin = 24; // STCP
+const int serialDataPin = 10; // DS
+const int clockPin = 8; // SHCP
+const int latchPin = 9; // STCP
 struct ShiftRegister initShiftRegister(int ds, int shcp, int stcp, int srclr)
 {
   pinMode(ds, OUTPUT);
