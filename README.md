@@ -19,6 +19,8 @@
 
 **7. Fav:** This button enables **Ch+** and **Ch-** to increase/decrease the hours, by one at a time. Use it when time switches between Winter / Summer.
 
-**8. Recall button:** Test the alarm’s buzzer without setting an alarm. If you want to stop it, press recall again when the buzzer is not emmiting sound. If you do it otherwise, it’ll just keep making an annoying noise.
+**8. Zoom:** This button enables **Blue Button** and **Red Button** to increase/decrease the minutes, by one at a time. Use it when the clock falls behind real time.
+
+**9. Recall button:** Test the alarm’s buzzer without setting an alarm. If you want to stop it, press recall again when the buzzer is not emmiting sound. If you do it otherwise, it’ll just keep making an annoying noise.
 
 The rezistor on my shelf are 10 Ohms.

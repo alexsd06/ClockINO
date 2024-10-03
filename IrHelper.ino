@@ -47,12 +47,19 @@ int irToNumber(ul rawData)
 #define exit 2757427455
 #define standby 3058237695
 #define mute 3024814335
+
 #define info 2690580735
 #define volminus 3776839935
 #define volplus 2740715775
+
 #define fav 2807562495
 #define chminus 3826974975
 #define chplus 2707292415
+
+#define zoom 3008102655
+#define redbutton 3994091775
+#define bluebutton 2941255935
+
 #define ok 3760128255
 #define recall 3910533375
 void decodeIr(ul rawData)
@@ -95,6 +102,12 @@ void decodeIr(ul rawData)
       decreaseHours(); break;
     case chplus:
       increaseHours(); break;
+    case zoom:
+      readMinutes=!readMinutes; break;
+    case redbutton:
+      decreaseMinutes(); break;
+    case bluebutton:
+      increaseMinutes(); break;
     case ok:
       lightState=!lightState;
       digitalWriteFast(LIGHT_PIN, lightState);

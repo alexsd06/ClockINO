@@ -69,15 +69,19 @@ void display()
   if (readHours==true) {
     showUpperLeftDot();
   }
+  if (readMinutes==true) { //Why doesn't this work?
+    showLowerLeftDot();
+    showUpperLeftDot();
+  }
   if (readAlarm==true) {
     showLowerLeftDot();
     showUpperLeftDot();
   }
   //////////////////////////
-  if (!readAlarm&&!readSecs) {
+  if (!readMinutes&&!readAlarm&&!readSecs) {
     hideLowerLeftDot();
   }
-  if (!readAlarm&&!readHours) {
+  if (!readMinutes&&!readAlarm&&!readHours) {
     hideUpperLeftDot();
   }
   /////////////////////////
@@ -87,6 +91,7 @@ void display()
 
 void decreaseHours()
 {
+  if (!readHours) return;
   int secs=rtc.now().second();
   int mins=rtc.now().minute();
   int hours=rtc.now().hour();
@@ -98,6 +103,7 @@ void decreaseHours()
 
 void increaseHours()
 {
+  if (!readHours) return;
   int secs=rtc.now().second();
   int mins=rtc.now().minute();
   int hours=rtc.now().hour();
@@ -108,6 +114,7 @@ void increaseHours()
 }
 
 void decreaseSeconds() {
+  if (!readSecs) return;
   int secs=rtc.now().second();
   int mins=rtc.now().minute();
   int hours=rtc.now().hour();
@@ -132,6 +139,7 @@ void decreaseSeconds() {
 }
 
 void increaseSeconds() {
+  if (!readSecs) return;
   int secs=rtc.now().second();
   int mins=rtc.now().minute();
   int hours=rtc.now().hour();
@@ -153,6 +161,47 @@ void increaseSeconds() {
   rtc.begin();
   rtc.adjust(DateTime(YMD, hours, mins, secs));
 
+}
+
+void decreaseMinutes()
+{
+  if (!readMinutes) return;
+  int secs=rtc.now().second();
+  int mins=rtc.now().minute();
+  int hours=rtc.now().hour();
+
+  mins--;
+  if (mins<0) {
+    mins=59;
+    hours--;
+    if (hours<0) {
+      hours=23;
+    }
+  }
+
+  rtc.begin();
+  rtc.adjust(DateTime(YMD, hours, mins, secs));
+}
+
+void increaseMinutes()
+{
+  if (!readMinutes) return;
+  int secs=rtc.now().second();
+  int mins=rtc.now().minute();
+  int hours=rtc.now().hour();
+
+  mins++;
+  if (mins>59) {
+    mins=0;
+    hours++;
+    if (hours>23) {
+      hours=0;
+    }
+  }
+
+  //Year Month Day
+  rtc.begin();
+  rtc.adjust(DateTime(YMD, hours, mins, secs));
 }
 
 void disableTimeReading()

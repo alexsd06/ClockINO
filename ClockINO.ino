@@ -38,6 +38,7 @@ int digit1=9, digit2=9, digit3=9, digit4=9;
 
 bool readSecs=false;
 bool readHours=false;
+bool readMinutes=false;
 
 bool lightState=false;
 
