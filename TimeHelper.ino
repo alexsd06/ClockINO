@@ -69,7 +69,7 @@ void display()
   if (readHours==true) {
     showUpperLeftDot();
   }
-  if (readMinutes==true) { //Why doesn't this work?
+  if (readMinutes==true) {
     showLowerLeftDot();
     showUpperLeftDot();
   }
